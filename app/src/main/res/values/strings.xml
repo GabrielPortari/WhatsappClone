@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">WhatsappClone</string>
+    <!-- Cadastro Activity-->
+    <string name="digitenome">Digite seu nome</string>
+    <string name="digiteemail">Digite seu email</string>
+    <string name="digitesenha">Digite sua senha</string>
+    <string name="cadastrar">Cadastrar</string>
+    <string name="entrar">Entrar</string>
+    <string name="naopossuilogin">Não tem uma conta? Cadastre-se</string>
+</resources>
