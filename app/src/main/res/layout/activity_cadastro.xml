@@ -12,7 +12,7 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/inputNome_cadastro"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,62 +20,68 @@
         app:srcCompat="@drawable/usuario" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputNome_cadastro"
-        android:layout_width="0dp"
+        android:id="@+id/textInputLayout2"
+        android:layout_width="347dp"
         android:layout_height="wrap_content"
         android:textColorHint="@color/gray"
-        app:layout_constraintBottom_toTopOf="@+id/inputEmail_cadastro"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputNome_cadastro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/digitenome" />
+            android:hint="@string/digitenome"
+            android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputEmail_cadastro"
-        android:layout_width="0dp"
+        android:id="@+id/textInputLayout"
+        android:layout_width="347dp"
         android:layout_height="wrap_content"
         android:textColorHint="@color/gray"
-        app:layout_constraintBottom_toTopOf="@+id/inputSenha_cadastro"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputNome_cadastro">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputEmail_cadastro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/digiteemail" />
+            android:hint="@string/digiteemail"
+            android:inputType="text|textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputSenha_cadastro"
-        android:layout_width="0dp"
+        android:id="@+id/textInputLayout3"
+        android:layout_width="347dp"
         android:layout_height="wrap_content"
         android:textColorHint="@color/gray"
         app:layout_constraintBottom_toTopOf="@+id/buttonCadastro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputEmail_cadastro">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputSenha_cadastro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/digitesenha" />
+            android:hint="@string/digitesenha"
+            android:inputType="text|textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/buttonCadastro"
-        android:layout_width="0dp"
+        android:layout_width="347dp"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/colorAccent"
         android:text="@string/cadastrar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputSenha_cadastro" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

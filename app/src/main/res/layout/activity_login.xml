@@ -12,7 +12,7 @@
         android:id="@+id/imageView2"
         android:layout_width="200dp"
         android:layout_height="189dp"
-        app:layout_constraintBottom_toTopOf="@+id/inputEmail_login"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,16 +20,17 @@
         app:srcCompat="@drawable/logo" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputEmail_login"
-        android:layout_width="0dp"
+        android:id="@+id/textInputLayout5"
+        android:layout_width="347dp"
         android:layout_height="wrap_content"
         android:textColorHint="@color/gray"
-        app:layout_constraintBottom_toTopOf="@+id/inputSenha_login"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputEmail_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/digiteemail"
@@ -37,16 +38,17 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputSenha_login"
-        android:layout_width="0dp"
+        android:id="@+id/textInputLayout4"
+        android:layout_width="347dp"
         android:layout_height="wrap_content"
         android:textColorHint="@color/gray"
         app:layout_constraintBottom_toTopOf="@+id/buttonLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputEmail_login">
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout5">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputSenha_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/digitesenha"
@@ -55,21 +57,19 @@
 
     <Button
         android:id="@+id/buttonLogin"
-        android:layout_width="0dp"
+        android:layout_width="347dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:backgroundTint="@color/colorAccent"
         android:text="@string/entrar"
         app:layout_constraintBottom_toTopOf="@+id/textView_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inputSenha_login" />
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout4" />
 
     <TextView
         android:id="@+id/textView_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="@string/naopossuilogin"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
