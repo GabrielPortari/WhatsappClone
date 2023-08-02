@@ -23,6 +23,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     private TextInputEditText editEmail, editSenha;
@@ -98,7 +99,18 @@ public class LoginActivity extends AppCompatActivity {
     public void abrirTelaCadastro(View view){
         startActivity(new Intent(LoginActivity.this, CadastroActivity.class));
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser usuarioAtual = auth.getCurrentUser();
+        if(usuarioAtual != null){
+            abrirTelaPrincipal();
+        }
+    }
+
     public void abrirTelaPrincipal(){
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
     }
+
 }

@@ -7,4 +7,15 @@
     <string name="cadastrar">Cadastrar</string>
     <string name="entrar">Entrar</string>
     <string name="naopossuilogin">Não tem uma conta? Cadastre-se</string>
+
+    <string name="menu_pesquisar">Pesquisar</string>
+    <string name="menu_config">Configurações</string>
+    <string name="menu_sair">Sair</string>
+
+    <string name="contatos">Contatos</string>
+    <string name="conversas">Conversas</string>
+    <string name="nome_usuario">Nome do Usuário</string>
+
+    <string name="info_config">Este não é seu nome de usuário e/ou senha, este nome ficará visível para outros contatos do seu Whatsapp</string>
+
 </resources>

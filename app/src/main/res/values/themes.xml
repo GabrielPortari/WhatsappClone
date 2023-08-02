@@ -6,7 +6,10 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
-
+    <style name="Toolbar" parent="Base.Theme.WhatsappClone">
+        <item name="titleTextColor">@color/white</item>
+    </style>
     <style name="Theme.WhatsappClone" parent="Base.Theme.WhatsappClone" />
 </resources>
