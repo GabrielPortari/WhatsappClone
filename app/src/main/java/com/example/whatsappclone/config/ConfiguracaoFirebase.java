@@ -3,10 +3,13 @@ package com.example.whatsappclone.config;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class ConfiguracaoFirebase {
     private static DatabaseReference dbReference;
     private static FirebaseAuth auth;
+    private static StorageReference storage;
 
     public static DatabaseReference getFirebaseDatabaseReference(){
         if(dbReference == null){
@@ -19,5 +22,11 @@ public class ConfiguracaoFirebase {
             auth = FirebaseAuth.getInstance();
         }
         return auth;
+    }
+    public static StorageReference getFirebaseStorageReference(){
+        if(storage == null){
+            storage = FirebaseStorage.getInstance().getReference();
+        }
+        return storage;
     }
 }
