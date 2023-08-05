@@ -8,8 +8,8 @@ import com.google.firebase.storage.StorageReference;
 
 public class ConfiguracaoFirebase {
     private static DatabaseReference dbReference;
-    private static FirebaseAuth auth;
     private static StorageReference storage;
+    private static FirebaseAuth auth;
 
     public static DatabaseReference getFirebaseDatabaseReference(){
         if(dbReference == null){
@@ -17,16 +17,16 @@ public class ConfiguracaoFirebase {
         }
         return dbReference;
     }
-    public static FirebaseAuth getFirebaseAuthReference(){
-        if(auth == null){
-            auth = FirebaseAuth.getInstance();
-        }
-        return auth;
-    }
     public static StorageReference getFirebaseStorageReference(){
         if(storage == null){
             storage = FirebaseStorage.getInstance().getReference();
         }
         return storage;
+    }
+    public static FirebaseAuth getFirebaseAuthReference(){
+        if(auth == null){
+            auth = FirebaseAuth.getInstance();
+        }
+        return auth;
     }
 }

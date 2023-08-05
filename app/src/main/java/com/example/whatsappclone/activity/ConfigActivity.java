@@ -3,36 +3,41 @@ package com.example.whatsappclone.activity;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.whatsappclone.R;
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
-import com.example.whatsappclone.helper.Base64Custom;
 import com.example.whatsappclone.helper.Permissao;
 import com.example.whatsappclone.helper.UsuarioFirebase;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.whatsappclone.model.Usuario;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -46,16 +51,27 @@ public class ConfigActivity extends AppCompatActivity {
     private static final int SELECAO_CAMERA = 100;
     private static final int SELECAO_GALERIA = 200;
     private CircleImageView circleImageView;
+    private EditText editNome;
+    private ImageView imageAttNome;
     private StorageReference storageReference;
     private String idUsuario;
+    private Usuario usuarioLogado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
+        //definição dos findviewbyid
+        imageButton_galeria = findViewById(R.id.imageButton_galeria);
+        imageButton_camera = findViewById(R.id.imageButton_camera);
+        circleImageView = findViewById(R.id.circleImageView);
+        editNome = findViewById(R.id.editNome_config);
+        imageAttNome = findViewById(R.id.imageAtualizaNome_config);
+
         //configurações iniciais
         storageReference = ConfiguracaoFirebase.getFirebaseStorageReference();
         idUsuario = UsuarioFirebase.getIdUsuario();
+        usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
 
         //Validação das permissões
         Permissao.validarPermissao(permissoes, this, 1);
@@ -66,9 +82,17 @@ public class ConfigActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        imageButton_galeria = findViewById(R.id.imageButton_galeria);
-        imageButton_camera = findViewById(R.id.imageButton_camera);
-        circleImageView = findViewById(R.id.circleImageView);
+        //Recuperar dados do usuario
+        FirebaseUser user = UsuarioFirebase.getUsuarioAtual();
+        Uri url = user.getPhotoUrl();
+        if(url != null){
+            Glide.with(this).load(url).into(circleImageView);
+        }else{
+            circleImageView.setImageResource(R.drawable.padrao);
+        }
+        editNome.setText(user.getDisplayName());
+
+        //Listeners dos botões de camera e galeria
         imageButton_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +112,18 @@ public class ConfigActivity extends AppCompatActivity {
                 //}
             }
         });
+        imageAttNome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String nome = editNome.getText().toString();
+                boolean sucesso = UsuarioFirebase.atualizaNomeUsuario(nome);
+                if(sucesso){
+                    usuarioLogado.setNome(nome);
+                    usuarioLogado.atualizarUsuario();
+                    Toast.makeText(ConfigActivity.this, "Dados atualizados com sucesso", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -100,13 +136,11 @@ public class ConfigActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void alertaValidacao(){
         /*
         * Quando as aulas foram gravadas, as permissões se comportavam de forma diferente, logo o que foi feito abaixo
         * possivelmente teve algumas funcionalidades alteradas, e as permissões se comportam de forma diferente
-        * */
+        *
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Permissões Negadas");
         builder.setMessage("Para continuar utilizando o app, as permissões devem ser aceitadas");
@@ -114,13 +148,21 @@ public class ConfigActivity extends AppCompatActivity {
         builder.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //finish();
+                finish();
             }
         });
         AlertDialog dialog = builder.create();
-        //dialog.show();
+        dialog.show();
+        */
     }
-
+    public void atualizaFotoUsuario(Uri url){
+        boolean sucess = UsuarioFirebase.atualizaFotoUsuario(url);
+        if (sucess) {
+            usuarioLogado.setFoto(url.toString());
+            usuarioLogado.atualizarUsuario();
+            Toast.makeText(this, "Foto alterada", Toast.LENGTH_SHORT).show();
+        }
+    }
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -133,11 +175,36 @@ public class ConfigActivity extends AppCompatActivity {
                             if(img != null){
                                 circleImageView.setImageBitmap(img);
 
-                                StorageReference imagemRef = storageReference
+                                //Recuperar dados da imagem para o firebase
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                img.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+                                byte[] dataImage = baos.toByteArray();
+
+                                //Salvar no firebase
+                                final StorageReference imagemRef = storageReference
                                         .child("imagens")
                                         .child("perfil")
-                                        .child(idUsuario);
-                                        //.child();
+                                        .child(idUsuario)
+                                        .child("perfil.jpg");
+                                UploadTask uploadTask = imagemRef.putBytes(dataImage);
+                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.i("FB STORAGE", "Falha ao fazer upload da imagem");
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        Log.i("FB STORAGE", "Sucesso ao fazer upload da imagem");
+                                        imagemRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Uri> task) {
+                                                Uri url = task.getResult();
+                                                atualizaFotoUsuario(url);
+                                            }
+                                        });
+                                    }
+                                });
                             }
                         }catch (Exception e){
                             e.printStackTrace();
@@ -146,15 +213,52 @@ public class ConfigActivity extends AppCompatActivity {
                 }
             }
     );
+
     private ActivityResultLauncher<Intent> galeriaActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == Activity.RESULT_OK){
+                        Bitmap img = null;
                         try{
                             Uri localImg = result.getData().getData();
-                            circleImageView.setImageURI(localImg);
+                            img = MediaStore.Images.Media.getBitmap(getContentResolver(), localImg);
+                            if(img != null){
+
+                                circleImageView.setImageURI(localImg);
+                                //Recuperar dados da imagem para o firebase
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                                img.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+                                byte[] dataImage = baos.toByteArray();
+
+                                //Salvar no firebase
+                                final StorageReference imagemRef = storageReference
+                                        .child("imagens")
+                                        .child("perfil")
+                                        .child(idUsuario)
+                                        .child("perfil.jpg");
+                                UploadTask uploadTask = imagemRef.putBytes(dataImage);
+                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.i("FB STORAGE", "Falha ao fazer upload da imagem");
+                                        Toast.makeText(ConfigActivity.this, "Falha ao fazer upload da imagem", Toast.LENGTH_SHORT).show();
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        Log.i("FB STORAGE", "Sucesso ao fazer upload da imagem");
+                                        imagemRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Uri> task) {
+                                                Uri url = task.getResult();
+                                                atualizaFotoUsuario(url);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
                         }catch (Exception e){
                             e.printStackTrace();
                         }
