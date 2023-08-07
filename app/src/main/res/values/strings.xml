@@ -16,6 +16,9 @@
     <string name="conversas">Conversas</string>
     <string name="nome_usuario">Nome de Usuário</string>
 
+    <string name="contato_nome">Nome do Usuário</string>
+    <string name="contato_email">Email de Usuário</string>
+
     <string name="info_config">Este não é seu nome de usuário e/ou senha, este nome ficará visível para outros contatos do seu Whatsapp</string>
 
 </resources>

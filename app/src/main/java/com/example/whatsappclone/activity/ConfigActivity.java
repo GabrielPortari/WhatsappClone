@@ -48,8 +48,8 @@ public class ConfigActivity extends AppCompatActivity {
             Manifest.permission.CAMERA
     };
     private ImageButton imageButton_camera, imageButton_galeria;
-    private static final int SELECAO_CAMERA = 100;
-    private static final int SELECAO_GALERIA = 200;
+    //private static final int SELECAO_CAMERA = 100;
+    //private static final int SELECAO_GALERIA = 200;
     private CircleImageView circleImageView;
     private EditText editNome;
     private ImageView imageAttNome;
@@ -64,7 +64,7 @@ public class ConfigActivity extends AppCompatActivity {
         //definição dos findviewbyid
         imageButton_galeria = findViewById(R.id.imageButton_galeria);
         imageButton_camera = findViewById(R.id.imageButton_camera);
-        circleImageView = findViewById(R.id.circleImageView);
+        circleImageView = findViewById(R.id.circleImageView_config);
         editNome = findViewById(R.id.editNome_config);
         imageAttNome = findViewById(R.id.imageAtualizaNome_config);
 
