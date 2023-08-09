@@ -7,4 +7,6 @@
     <color name="colorPrimary">#075E54</color>
     <color name="colorPrimaryDark">#054D44</color>
     <color name="colorAccent">#25D366</color>
+
+    <color name="enviarMensagemColor">#DBF9C4</color>
 </resources>

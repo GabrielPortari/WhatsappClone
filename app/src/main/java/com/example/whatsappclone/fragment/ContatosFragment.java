@@ -101,6 +101,7 @@ public class ContatosFragment extends Fragment {
                 for(DataSnapshot dados : snapshot.getChildren()){
                     /*Lista os usuários cadastrados, porém
                     não adiciona o próprio usuario aos contatos*/
+
                     Usuario usuario = dados.getValue(Usuario.class);
                     if(!usuario.getEmail().equals(usuarioAtual.getEmail())){
                         listaContatos.add(usuario);

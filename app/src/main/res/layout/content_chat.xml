@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerMensagens"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1">
@@ -37,13 +37,12 @@
             android:paddingRight="16dp">
 
             <EditText
-                android:id="@+id/editTextText"
+                android:id="@+id/editText_mensagem"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="text"
-                android:text="@string/conversas"
                 android:textColorHint="@color/gray" />
 
             <ImageView
@@ -54,7 +53,7 @@
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
+            android:id="@+id/fab_enviarMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"

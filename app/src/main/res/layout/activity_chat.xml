@@ -22,7 +22,7 @@
         android:id="@+id/circleImageView_chat"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="64dp"
         android:src="@drawable/padrao"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar2"
         app:layout_constraintStart_toStartOf="parent"
