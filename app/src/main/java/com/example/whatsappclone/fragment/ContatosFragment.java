@@ -35,7 +35,7 @@ public class ContatosFragment extends Fragment {
     private ArrayList<Usuario> listaContatos = new ArrayList<>();
     private DatabaseReference usuariosRef;
     private ValueEventListener eventListenerContatos;
-    FirebaseUser usuarioAtual;
+    private FirebaseUser usuarioAtual;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
