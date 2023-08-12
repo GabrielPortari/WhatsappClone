@@ -5,7 +5,8 @@
     <item
         android:id="@+id/menu_pesquisa"
         android:icon="@drawable/ic_search_24"
-        android:title="@string/menu_sair"
+        android:title="@string/menu_pesquisar"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_config"

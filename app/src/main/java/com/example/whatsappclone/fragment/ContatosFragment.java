@@ -58,7 +58,8 @@ public class ContatosFragment extends Fragment {
         recyclerContatos.setAdapter(contatosAdapter);
 
         //Configuração clickListener no recyclerview
-        recyclerContatos.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerContatos, new RecyclerItemClickListener.OnItemClickListener() {
+        recyclerContatos.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerContatos,
+                new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Usuario usuarioSelecionado = listaContatos.get(position);

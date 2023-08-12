@@ -1,5 +1,6 @@
 package com.example.whatsappclone.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,16 +9,21 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import com.example.whatsappclone.R;
+import com.example.whatsappclone.activity.ChatActivity;
 import com.example.whatsappclone.adapter.ContatosAdapter;
 import com.example.whatsappclone.adapter.ConversasAdapter;
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
+import com.example.whatsappclone.helper.RecyclerItemClickListener;
 import com.example.whatsappclone.helper.UsuarioFirebase;
 import com.example.whatsappclone.model.Conversa;
+import com.example.whatsappclone.model.Usuario;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,7 +37,7 @@ public class ConversasFragment extends Fragment {
 
     private RecyclerView recyclerConversas;
     private List<Conversa> listaConversas = new ArrayList<>();
-    private ConversasAdapter conversasAdapter;
+    private ConversasAdapter conversasAdapter, buscaAdapter;
     private DatabaseReference databaseReference, conversasReference;
     private ChildEventListener conversasChildEventListener;
 
@@ -56,6 +62,28 @@ public class ConversasFragment extends Fragment {
         recyclerConversas.setHasFixedSize(true);
         recyclerConversas.setAdapter(conversasAdapter);
 
+        recyclerConversas.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerConversas,
+                new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                //Recupera o usuario de acordo com a conversa selecionada
+                Usuario usuarioSelecionado = listaConversas.get(position).getUsuarioExibido();
+
+                Intent intent = new Intent(getActivity(), ChatActivity.class);
+                intent.putExtra("usuarioSelecionado", usuarioSelecionado);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        }));
         return view;
     }
 
@@ -64,7 +92,37 @@ public class ConversasFragment extends Fragment {
         super.onStart();
         recuperarConversa();
     }
+    public void buscaAoDigitar(String s){
+        List<Conversa> listaBusca = new ArrayList<>();
 
+        for(Conversa c : listaConversas){
+            String buscaNome = c.getUsuarioExibido().getNome();
+            String buscaMensagem = c.getUltimaMensagem();
+
+            if(buscaNome.contains(s) || buscaMensagem.contains(s)) {
+                listaBusca.add(c);
+            }
+        }
+        /*
+        buscaAdapter = new ConversasAdapter(listaBusca, getActivity());
+        recyclerConversas.setAdapter(buscaAdapter);
+        conversasAdapter.notifyDataSetChanged();
+        */
+        //RECYCLER ESTÁ ACESSANDO POSIÇÃO NULA, E NÃO ESTÁ FUNCIONANDO CORRETAMENTE ---------------------- ARRUMAR
+
+
+        Log.i("INFO BUSCA", "BUSCANDO: " + s);
+    }
+
+    public void recarregarConversas(){
+        /*
+        conversasAdapter = new ConversasAdapter(listaConversas, getActivity());
+        recyclerConversas.setAdapter(conversasAdapter);
+        conversasAdapter.notifyDataSetChanged();
+        */
+
+        Log.i("INFO BUSCA", "BUSCA FECHADA");
+    }
     @Override
     public void onStop() {
         super.onStop();
