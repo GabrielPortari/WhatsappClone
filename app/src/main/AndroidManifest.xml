@@ -37,6 +37,10 @@
             android:name=".activity.CadastroActivity"
             android:exported="false" />
         <activity
+            android:name=".activity.GrupoActivity"
+            android:exported="false"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity
             android:name=".activity.LoginActivity"
             android:exported="true">
             <intent-filter>

@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 
 import com.example.whatsappclone.R;
 import com.example.whatsappclone.activity.ChatActivity;
+import com.example.whatsappclone.activity.GrupoActivity;
 import com.example.whatsappclone.adapter.ContatosAdapter;
 import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.example.whatsappclone.helper.RecyclerItemClickListener;
@@ -63,10 +64,16 @@ public class ContatosFragment extends Fragment {
             @Override
             public void onItemClick(View view, int position) {
                 Usuario usuarioSelecionado = listaContatos.get(position);
+                boolean cabecalho = usuarioSelecionado.getEmail().isEmpty();
 
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra("usuarioSelecionado", usuarioSelecionado);
-                startActivity(intent);
+                if(cabecalho){
+                    Intent intent = new Intent(getActivity(), GrupoActivity.class);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra("usuarioSelecionado", usuarioSelecionado);
+                    startActivity(intent);
+                }
             }
 
             @Override
@@ -80,6 +87,12 @@ public class ContatosFragment extends Fragment {
             }
         }));
 
+        //EMAIL VAZIO É UTILIZADO COMO CABEÇALHO PARA NOVO GRUPO
+        Usuario itemGrupo = new Usuario();
+        itemGrupo.setNome("Novo Grupo");
+        itemGrupo.setEmail("");
+
+        listaContatos.add(itemGrupo);
         return view;
     }
 

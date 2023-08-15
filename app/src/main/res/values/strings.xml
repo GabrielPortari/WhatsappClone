@@ -22,4 +22,12 @@
     <string name="info_config">Este não é seu nome de usuário e/ou senha, este nome ficará visível para outros contatos do seu Whatsapp</string>
     <string name="mensagemEnviada">Mensagem enviada</string>
     <string name="mensagemRecebida">Mensagem recebida</string>
+    <string name="title_activity_grupo">GrupoActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+
 </resources>

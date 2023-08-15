@@ -108,7 +108,7 @@ public class ConversasFragment extends Fragment {
         recyclerConversas.setAdapter(buscaAdapter);
         conversasAdapter.notifyDataSetChanged();
         */
-        //RECYCLER ESTÁ ACESSANDO POSIÇÃO NULA, E NÃO ESTÁ FUNCIONANDO CORRETAMENTE ---------------------- ARRUMAR
+        //RECYCLER ESTÁ ACESSANDO POSIÇÃO NULA, E NÃO ESTÁ FUNCIONANDO CORRETAMENTE
 
 
         Log.i("INFO BUSCA", "BUSCANDO: " + s);
@@ -120,7 +120,7 @@ public class ConversasFragment extends Fragment {
         recyclerConversas.setAdapter(conversasAdapter);
         conversasAdapter.notifyDataSetChanged();
         */
-
+        //RECYCLER ESTÁ ACESSANDO POSIÇÃO NULA, E NÃO ESTÁ FUNCIONANDO CORRETAMENTE
         Log.i("INFO BUSCA", "BUSCA FECHADA");
     }
     @Override

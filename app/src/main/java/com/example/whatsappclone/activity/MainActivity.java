@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
             public boolean onClose() {
                 ConversasFragment fragment = (ConversasFragment) viewPagerAdapter.createFragment(0);
                 viewPager2.setCurrentItem(0);
-                tabLayout.getTabAt(0).select();
                 fragment.recarregarConversas();
                 return false;
             }
@@ -97,8 +96,9 @@ public class MainActivity extends AppCompatActivity {
                 tabLayout.getTabAt(0).select();
                 if(!newText.isEmpty() || newText != null){
                     fragment.buscaAoDigitar(newText.toLowerCase());
+                    //A LISTAGEM DA BUSCA NÃO ESTÁ FUNCIONANDO CORRETAMENTE
                 }
-                return false;
+                return true;
             }
         });
         return super.onCreateOptionsMenu(menu);
