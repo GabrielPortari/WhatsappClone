@@ -57,6 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
+            android:contentDescription="@string/fab_enviar_mensagem"
             app:backgroundTint="@color/colorPrimary"
             app:fabSize="mini"
             app:srcCompat="@drawable/ic_send_24"

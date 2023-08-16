@@ -29,5 +29,7 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-
+    <!-- Content description -->
+    <string name="fab_criar_grupo">Floating action button para criação de grupo</string>
+    <string name="fab_enviar_mensagem">Floating action button para enviar mensagem</string>
 </resources>
