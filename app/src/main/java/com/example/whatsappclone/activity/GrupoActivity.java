@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +18,7 @@ import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.example.whatsappclone.helper.RecyclerItemClickListener;
 import com.example.whatsappclone.helper.UsuarioFirebase;
 import com.example.whatsappclone.model.Usuario;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,13 +26,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GrupoActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
-
+    private FloatingActionButton fab_cadastrarGrupo;
     private RecyclerView recyclerMembros, recyclerMembrosSelecionados;
     private ContatosAdapter contatosAdapter;
     private GrupoSelecionadoAdapter grupoSelecionadoAdapter;
@@ -51,10 +54,12 @@ public class GrupoActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Criar novo grupo");
         toolbar.setTitleTextColor(getColor(R.color.white));
+        toolbar.setSubtitleTextColor(getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Configurações iniciais
+        fab_cadastrarGrupo = findViewById(R.id.fab_cadastrarGrupo);
         recyclerMembros = findViewById(R.id.recyclerMembros);
         recyclerMembrosSelecionados = findViewById(R.id.recyclerMembrosSelecionados);
 
@@ -132,6 +137,14 @@ public class GrupoActivity extends AppCompatActivity {
 
             }
         }));
+        fab_cadastrarGrupo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(GrupoActivity.this, CadastrarGrupoActivity.class);
+                intent.putExtra("membros", (Serializable) listaMembrosSelecionados);
+                startActivity(intent);
+            }
+        });
     }
 
     public void recuperarContatos(){

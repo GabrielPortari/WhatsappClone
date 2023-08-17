@@ -23,13 +23,14 @@
     <string name="mensagemEnviada">Mensagem enviada</string>
     <string name="mensagemRecebida">Mensagem recebida</string>
     <string name="title_activity_grupo">GrupoActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+
+    <!-- Activity cadastrar grupo -->
+    <string name="nome_grupo">Nome do grupo</string>
+    <string name="definicoes_grupo">Defina o nome do grupo, e uma imagem (opcional)</string>
+    <string name="participantes_grupo">Participantes: 0</string>
 
     <!-- Content description -->
     <string name="fab_criar_grupo">Floating action button para criação de grupo</string>
     <string name="fab_enviar_mensagem">Floating action button para enviar mensagem</string>
+    <string name="fab_confirmar_criar_grupo">Floating action button para confirmar criação de grupo</string>
 </resources>
