@@ -31,6 +31,7 @@ import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.example.whatsappclone.helper.Base64Custom;
 import com.example.whatsappclone.helper.UsuarioFirebase;
 import com.example.whatsappclone.model.Conversa;
+import com.example.whatsappclone.model.Grupo;
 import com.example.whatsappclone.model.Mensagem;
 import com.example.whatsappclone.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -59,6 +60,7 @@ public class ChatActivity extends AppCompatActivity {
     private ImageView imageCamera;
     private FloatingActionButton fabChat;
     private Usuario contato;
+    private Grupo grupo;
 
     private RecyclerView recyclerMensagem;
     private MensagemAdapter mensagemAdapter;
@@ -97,17 +99,33 @@ public class ChatActivity extends AppCompatActivity {
         //Recuperar Dados do usuario clicado
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
-            contato = (Usuario) bundle.getSerializable("usuarioSelecionado");
-            nomeChat.setText(contato.getNome());
-            String foto = contato.getFoto();
-            if (foto != null) {
-                Uri uri = Uri.parse(contato.getFoto());
-                Glide.with(ChatActivity.this).load(uri).into(fotoChat);
+            if(bundle.containsKey("grupoSelecionado")){
+                /*RECUPERAÇÃO DE DADOS PARA UMA CONVERSA EM GRUPO*/
+                grupo = (Grupo) bundle.getSerializable("grupoSelecionado");
+                nomeChat.setText(grupo.getNome());
+
+                String foto = grupo.getFoto();
+                if(foto != null){
+                    Uri url = Uri.parse(grupo.getFoto());
+                    Glide.with(ChatActivity.this).load(url).into(fotoChat);
+                }else{
+                    fotoChat.setImageResource(R.drawable.padrao);
+                }
+
             }else{
-                fotoChat.setImageResource(R.drawable.padrao);
+                /*RECUPERAÇÃO DE DADOS PARA UMA CONVERSA 1:1*/
+                contato = (Usuario) bundle.getSerializable("usuarioSelecionado");
+                nomeChat.setText(contato.getNome());
+                String foto = contato.getFoto();
+                if (foto != null) {
+                    Uri url = Uri.parse(contato.getFoto());
+                    Glide.with(ChatActivity.this).load(url).into(fotoChat);
+                }else{
+                    fotoChat.setImageResource(R.drawable.padrao);
+                }
+                //Recuperar dados do usuario que recebe
+                idUsuarioRecebe = Base64Custom.codeBase64(contato.getEmail());
             }
-            //Recuperar dados do usuario que recebe
-            idUsuarioRecebe = Base64Custom.codeBase64(contato.getEmail());
         }
 
         //Configuração adapter
@@ -126,6 +144,7 @@ public class ChatActivity extends AppCompatActivity {
                 .child("mensagens")
                 .child(idUsuarioEnvia)
                 .child(idUsuarioRecebe);
+
         fabChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,42 +166,62 @@ public class ChatActivity extends AppCompatActivity {
         String textMsg = editMensagem.getText().toString();
         if(!textMsg.isEmpty()){
 
-            //Criar mensagem
-            Mensagem mensagem = new Mensagem();
-            mensagem.setMensagem(textMsg);
-            mensagem.setIdUsuario(idUsuarioEnvia);
+            if(contato != null){
+                //Criar mensagem
+                Mensagem mensagem = new Mensagem();
+                mensagem.setMensagem(textMsg);
+                mensagem.setIdUsuario(idUsuarioEnvia);
 
-            //Salvar mensagem no firebase
-            salvarMensagemFirebase(idUsuarioEnvia, idUsuarioRecebe, mensagem);
-            editMensagem.setText("");
+                //Salvar mensagem no firebase
+                salvarMensagemFirebase(idUsuarioEnvia, idUsuarioRecebe, mensagem);
+                editMensagem.setText("");
 
-            //Salvar conversa
-            salvarConversa(mensagem);
+                //Salvar conversa
+                Usuario usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
+
+                salvarConversa(idUsuarioEnvia, idUsuarioRecebe, contato, mensagem, false);
+                salvarConversa(idUsuarioRecebe, idUsuarioEnvia, usuarioLogado, mensagem, false);
+            }else{
+                for(Usuario membroGrupo : grupo.getMembros()){
+                    String idMembroGrupo = Base64Custom.codeBase64(membroGrupo.getEmail());
+                    String idUsuario = UsuarioFirebase.getIdUsuario();
+
+                    Mensagem mensagem = new Mensagem();
+                    mensagem.setIdUsuario(idUsuario);
+                    mensagem.setMensagem(textMsg);
+
+                    //Salvar mensagem para os membros
+                    salvarMensagemFirebase(idMembroGrupo, grupo.getId(), mensagem);
+
+                    salvarConversa(idMembroGrupo, grupo.getId(), contato, mensagem, true);
+                }
+            }
 
         }else{
             Toast.makeText(ChatActivity.this, "Digite uma mensagem", Toast.LENGTH_SHORT).show();
         }
     }
-    private void salvarConversa(Mensagem mensagem){
+    private void salvarConversa(String idEnvia, String idRecebe, Usuario usuarioExibido, Mensagem mensagem, Boolean isGroup){
+
         Conversa conversa = new Conversa();
 
-        //Configuração da conversa para salvar no firebase;
-        conversa.setIdUsuarioQueEnvia(idUsuarioEnvia);
-        conversa.setIdUsuarioQueRecebe(idUsuarioRecebe);
+        conversa.setIdUsuarioQueEnvia(idEnvia);
+        conversa.setIdUsuarioQueRecebe(idRecebe);
         conversa.setUltimaMensagem(mensagem.getMensagem());
-        conversa.setUsuarioExibido(contato);
+
+        if(isGroup){ //Salvar conversa de grupo
+            conversa.set_isGrupo(true);
+            conversa.setGrupo(grupo);
+        }else{ //Salvar conversa 1:1
+            conversa.set_isGrupo(false);
+            conversa.setUsuarioExibido(usuarioExibido);
+        }
 
         conversa.salvarNoFirebase();
     }
     private void salvarMensagemFirebase(String idEnvia, String idRecebe, Mensagem mensagem){
         DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference();
         DatabaseReference mensagemRef = databaseReference.child("mensagens");
-
-        mensagemRef
-                .child(idRecebe)
-                .child(idEnvia)
-                .push()
-                .setValue(mensagem);
 
         mensagemRef
                 .child(idEnvia)

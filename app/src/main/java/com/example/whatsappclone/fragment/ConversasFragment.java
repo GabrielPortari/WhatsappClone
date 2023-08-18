@@ -23,6 +23,7 @@ import com.example.whatsappclone.config.ConfiguracaoFirebase;
 import com.example.whatsappclone.helper.RecyclerItemClickListener;
 import com.example.whatsappclone.helper.UsuarioFirebase;
 import com.example.whatsappclone.model.Conversa;
+import com.example.whatsappclone.model.Grupo;
 import com.example.whatsappclone.model.Usuario;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -66,12 +67,21 @@ public class ConversasFragment extends Fragment {
                 new RecyclerItemClickListener.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                //Recupera o usuario de acordo com a conversa selecionada
-                Usuario usuarioSelecionado = listaConversas.get(position).getUsuarioExibido();
+                //Recupera o usuario/grupo de acordo com a conversa selecionada
+                Conversa conversaSelecionada = listaConversas.get(position);
 
-                Intent intent = new Intent(getActivity(), ChatActivity.class);
-                intent.putExtra("usuarioSelecionado", usuarioSelecionado);
-                startActivity(intent);
+                Grupo grupoSelecionado = conversaSelecionada.getGrupo();
+                Usuario usuarioSelecionado = conversaSelecionada.getUsuarioExibido();
+
+                if(conversaSelecionada.get_isGrupo()){
+                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra("grupoSelecionado", grupoSelecionado);
+                    startActivity(intent);
+                }else{
+                    Intent intent = new Intent(getActivity(), ChatActivity.class);
+                    intent.putExtra("usuarioSelecionado", usuarioSelecionado);
+                    startActivity(intent);
+                }
             }
 
             @Override

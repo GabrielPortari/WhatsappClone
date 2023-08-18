@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -112,6 +113,12 @@ public class CadastrarGrupoActivity extends AppCompatActivity {
                 grupo.setMembros(listaMembrosSelecionados);
                 grupo.setNome(nomeGrupo);
                 grupo.salvarNoFirebase();
+
+                Log.i("INFO GRUPO", "Grupo criado com sucesso");
+
+                Intent intent = new Intent(CadastrarGrupoActivity.this, ChatActivity.class);
+                intent.putExtra("grupoSelecionado", grupo);
+                startActivity(intent);
 
             }
         });

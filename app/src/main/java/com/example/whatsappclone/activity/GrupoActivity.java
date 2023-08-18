@@ -88,7 +88,7 @@ public class GrupoActivity extends AppCompatActivity {
                 //Adiciona a pessoa a lista de membros selecionados, trocando no recycler
                 listaMembrosSelecionados.add(usuarioSelecionado);
                 grupoSelecionadoAdapter.notifyDataSetChanged();
-                atualizarToolbar();
+
             }
 
             @Override
