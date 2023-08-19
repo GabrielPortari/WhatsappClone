@@ -8,11 +8,11 @@ public class Conversa {
     private String idUsuarioQueRecebe;
     private String ultimaMensagem;
     private Usuario usuarioExibido;
-    private Boolean isGrupo;
+    private Boolean isGroup;
     private Grupo grupo;
 
     public Conversa() {
-        this.set_isGrupo(false);
+        this.isGroup = false;
     }
 
     public void salvarNoFirebase(){
@@ -56,18 +56,19 @@ public class Conversa {
         this.usuarioExibido = usuarioExibido;
     }
 
-    public Boolean get_isGrupo() {
-        return isGrupo;
+    public Boolean getIsGroup() {
+        return isGroup;
     }
 
-    public void set_isGrupo(Boolean grupo) {
-        isGrupo = grupo;
+    public void setIsGroup(Boolean group) {
+        isGroup = group;
+    }
+
+    public Grupo getGrupo() {
+        return grupo;
     }
 
     public void setGrupo(Grupo grupo) {
         this.grupo = grupo;
-    }
-    public Grupo getGrupo(){
-        return grupo;
     }
 }

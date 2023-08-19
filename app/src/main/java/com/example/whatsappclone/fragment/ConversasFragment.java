@@ -70,14 +70,13 @@ public class ConversasFragment extends Fragment {
                 //Recupera o usuario/grupo de acordo com a conversa selecionada
                 Conversa conversaSelecionada = listaConversas.get(position);
 
-                Grupo grupoSelecionado = conversaSelecionada.getGrupo();
-                Usuario usuarioSelecionado = conversaSelecionada.getUsuarioExibido();
-
-                if(conversaSelecionada.get_isGrupo()){
+                if(conversaSelecionada.getIsGroup()){
+                    Grupo grupoSelecionado = conversaSelecionada.getGrupo();
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra("grupoSelecionado", grupoSelecionado);
                     startActivity(intent);
                 }else{
+                    Usuario usuarioSelecionado = conversaSelecionada.getUsuarioExibido();
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                     intent.putExtra("usuarioSelecionado", usuarioSelecionado);
                     startActivity(intent);

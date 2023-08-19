@@ -24,17 +24,20 @@ public class Grupo implements Serializable {
     public void salvarNoFirebase(){
         DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference();
         DatabaseReference grupoReference = databaseReference.child("grupos");
+
         grupoReference.child(getId()).setValue(this);
 
-        for(Usuario membros : getMembros()){
-            String idRemetente = Base64Custom.codeBase64(membros.getEmail());
-            String idDestinatario = getId();
+        //Salvar a conversa para os membros do grupo
+
+        for(Usuario membro : getMembros()){
+            String idEnvia = Base64Custom.codeBase64(membro.getEmail());
+            String idRecebe = getId();
 
             Conversa conversa = new Conversa();
-            conversa.setIdUsuarioQueEnvia(idRemetente);
-            conversa.setIdUsuarioQueRecebe(idDestinatario);
+            conversa.setIdUsuarioQueEnvia(idEnvia);
+            conversa.setIdUsuarioQueRecebe(idRecebe);
             conversa.setUltimaMensagem("");
-            conversa.set_isGrupo(true);
+            conversa.setIsGroup(true);
             conversa.setGrupo(this);
 
             conversa.salvarNoFirebase();

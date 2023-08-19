@@ -114,12 +114,10 @@ public class CadastrarGrupoActivity extends AppCompatActivity {
                 grupo.setNome(nomeGrupo);
                 grupo.salvarNoFirebase();
 
-                Log.i("INFO GRUPO", "Grupo criado com sucesso");
-
                 Intent intent = new Intent(CadastrarGrupoActivity.this, ChatActivity.class);
                 intent.putExtra("grupoSelecionado", grupo);
                 startActivity(intent);
-
+                Log.i("INFO GRUPO", "Grupo criado com sucesso");
             }
         });
     }

@@ -59,7 +59,7 @@ public class ChatActivity extends AppCompatActivity {
     private EditText editMensagem;
     private ImageView imageCamera;
     private FloatingActionButton fabChat;
-    private Usuario contato;
+    private Usuario usuarioSelecionado;
     private Grupo grupo;
 
     private RecyclerView recyclerMensagem;
@@ -102,6 +102,7 @@ public class ChatActivity extends AppCompatActivity {
             if(bundle.containsKey("grupoSelecionado")){
                 /*RECUPERAÇÃO DE DADOS PARA UMA CONVERSA EM GRUPO*/
                 grupo = (Grupo) bundle.getSerializable("grupoSelecionado");
+                idUsuarioRecebe = grupo.getId();
                 nomeChat.setText(grupo.getNome());
 
                 String foto = grupo.getFoto();
@@ -114,17 +115,18 @@ public class ChatActivity extends AppCompatActivity {
 
             }else{
                 /*RECUPERAÇÃO DE DADOS PARA UMA CONVERSA 1:1*/
-                contato = (Usuario) bundle.getSerializable("usuarioSelecionado");
-                nomeChat.setText(contato.getNome());
-                String foto = contato.getFoto();
+                usuarioSelecionado = (Usuario) bundle.getSerializable("usuarioSelecionado");
+                idUsuarioRecebe = Base64Custom.codeBase64(usuarioSelecionado.getEmail());
+                nomeChat.setText(usuarioSelecionado.getNome());
+
+                String foto = usuarioSelecionado.getFoto();
                 if (foto != null) {
-                    Uri url = Uri.parse(contato.getFoto());
+                    Uri url = Uri.parse(usuarioSelecionado.getFoto());
                     Glide.with(ChatActivity.this).load(url).into(fotoChat);
                 }else{
                     fotoChat.setImageResource(R.drawable.padrao);
                 }
                 //Recuperar dados do usuario que recebe
-                idUsuarioRecebe = Base64Custom.codeBase64(contato.getEmail());
             }
         }
 
@@ -165,8 +167,7 @@ public class ChatActivity extends AppCompatActivity {
     public void enviarMensagem(View v){
         String textMsg = editMensagem.getText().toString();
         if(!textMsg.isEmpty()){
-
-            if(contato != null){
+            if(usuarioSelecionado != null){ // ENVIANDO MENSAGEM 1:1
                 //Criar mensagem
                 Mensagem mensagem = new Mensagem();
                 mensagem.setMensagem(textMsg);
@@ -174,14 +175,18 @@ public class ChatActivity extends AppCompatActivity {
 
                 //Salvar mensagem no firebase
                 salvarMensagemFirebase(idUsuarioEnvia, idUsuarioRecebe, mensagem);
+                salvarMensagemFirebase(idUsuarioRecebe, idUsuarioEnvia, mensagem);
                 editMensagem.setText("");
 
-                //Salvar conversa
-                Usuario usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
+                // salva pra quem envia
+                salvarConversa(idUsuarioEnvia, idUsuarioRecebe, usuarioSelecionado, mensagem, false);
 
-                salvarConversa(idUsuarioEnvia, idUsuarioRecebe, contato, mensagem, false);
+                // salva pra quem recebe
+                Usuario usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
                 salvarConversa(idUsuarioRecebe, idUsuarioEnvia, usuarioLogado, mensagem, false);
-            }else{
+
+            }else{ // ENVIANDO MENSAGEM PRO GRUPO
+
                 for(Usuario membroGrupo : grupo.getMembros()){
                     String idMembroGrupo = Base64Custom.codeBase64(membroGrupo.getEmail());
                     String idUsuario = UsuarioFirebase.getIdUsuario();
@@ -191,9 +196,9 @@ public class ChatActivity extends AppCompatActivity {
                     mensagem.setMensagem(textMsg);
 
                     //Salvar mensagem para os membros
-                    salvarMensagemFirebase(idMembroGrupo, grupo.getId(), mensagem);
+                    salvarMensagemFirebase(idMembroGrupo, idUsuarioRecebe, mensagem);
 
-                    salvarConversa(idMembroGrupo, grupo.getId(), contato, mensagem, true);
+                    salvarConversa(idMembroGrupo, idUsuarioRecebe, usuarioSelecionado, mensagem, true);
                 }
             }
 
@@ -204,20 +209,20 @@ public class ChatActivity extends AppCompatActivity {
     private void salvarConversa(String idEnvia, String idRecebe, Usuario usuarioExibido, Mensagem mensagem, Boolean isGroup){
 
         Conversa conversa = new Conversa();
-
         conversa.setIdUsuarioQueEnvia(idEnvia);
         conversa.setIdUsuarioQueRecebe(idRecebe);
         conversa.setUltimaMensagem(mensagem.getMensagem());
 
         if(isGroup){ //Salvar conversa de grupo
-            conversa.set_isGrupo(true);
             conversa.setGrupo(grupo);
+            conversa.setIsGroup(true);
         }else{ //Salvar conversa 1:1
-            conversa.set_isGrupo(false);
             conversa.setUsuarioExibido(usuarioExibido);
+            conversa.setIsGroup(false);
         }
 
         conversa.salvarNoFirebase();
+
     }
     private void salvarMensagemFirebase(String idEnvia, String idRecebe, Mensagem mensagem){
         DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference();

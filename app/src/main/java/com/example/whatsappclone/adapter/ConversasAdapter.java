@@ -42,7 +42,7 @@ public class ConversasAdapter extends RecyclerView.Adapter<ConversasAdapter.MyVi
         Conversa conversa = conversaList.get(position);
         holder.textMensagem.setText(conversa.getUltimaMensagem());
 
-        if(conversa.get_isGrupo()){
+        if(conversa.getIsGroup()){
             Grupo grupo = conversa.getGrupo();
             holder.textNome.setText(grupo.getNome());
 
@@ -52,16 +52,17 @@ public class ConversasAdapter extends RecyclerView.Adapter<ConversasAdapter.MyVi
             }else{
                 holder.circleImageView.setImageResource(R.drawable.padrao);
             }
-
         }else{
             Usuario usuario = conversa.getUsuarioExibido();
-            holder.textNome.setText(usuario.getNome());
+            if(usuario != null){
+                holder.textNome.setText(usuario.getNome());
 
-            if(usuario.getFoto() != null){
-                Uri uri = Uri.parse(usuario.getFoto());
-                Glide.with(context).load(uri).into(holder.circleImageView);
-            }else{
-                holder.circleImageView.setImageResource(R.drawable.padrao);
+                if(usuario.getFoto() != null){
+                    Uri uri = Uri.parse(usuario.getFoto());
+                    Glide.with(context).load(uri).into(holder.circleImageView);
+                }else{
+                    holder.circleImageView.setImageResource(R.drawable.padrao);
+                }
             }
         }
     }
