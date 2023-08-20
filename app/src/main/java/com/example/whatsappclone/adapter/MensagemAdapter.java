@@ -47,13 +47,20 @@ public class MensagemAdapter extends RecyclerView.Adapter<MensagemAdapter.MyView
         String msg = mensagem.getMensagem();
         String imagem = mensagem.getImagem();
 
+        //Recupera nome, caso possua é mensagem em grupo
+        if(mensagem.getNome().isEmpty()){
+            holder.nome.setVisibility(View.GONE);
+        }else{
+            holder.nome.setText(mensagem.getNome());
+        }
+
         if( imagem != null){
             Uri uri = Uri.parse(imagem);
             Glide.with(context).load(uri).into(holder.imagem);
             //Caso tenha imagem, não mostra texto
             holder.mensagem.setVisibility(View.GONE);
         }else{
-            holder.mensagem.setText(mensagem.getMensagem());
+            holder.mensagem.setText(msg);
             //Caso tenha mensagem, nao mostra imagem
             holder.imagem.setVisibility(View.GONE);
         }
@@ -75,11 +82,11 @@ public class MensagemAdapter extends RecyclerView.Adapter<MensagemAdapter.MyView
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView mensagem;
+        TextView mensagem, nome;
         ImageView imagem;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            nome = itemView.findViewById(R.id.textNomeExibido);
             mensagem = itemView.findViewById(R.id.itemRecycler_msg);
             imagem = itemView.findViewById(R.id.itemRecycler_img);
         }

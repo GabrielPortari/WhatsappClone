@@ -88,11 +88,7 @@ public class ContatosFragment extends Fragment {
         }));
 
         //EMAIL VAZIO É UTILIZADO COMO CABEÇALHO PARA NOVO GRUPO
-        Usuario itemGrupo = new Usuario();
-        itemGrupo.setNome("Novo Grupo");
-        itemGrupo.setEmail("");
 
-        listaContatos.add(itemGrupo);
         return view;
     }
 
@@ -107,11 +103,24 @@ public class ContatosFragment extends Fragment {
         super.onStop();
         usuariosRef.removeEventListener(eventListenerContatos);
     }
-
+    public void criarMenuGrupo(){
+        /*DEFINE UM USUARIO VAZIO PARA SERVIR DE MENU DE CRIAÇÃO DE GRUPOS*/
+        Usuario itemGrupo = new Usuario();
+        itemGrupo.setNome("Novo Grupo");
+        itemGrupo.setEmail("");
+        listaContatos.add(itemGrupo);
+    }
     public void recuperarContatos(){
+
+
         eventListenerContatos = usuariosRef.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                listaContatos.clear();
+                criarMenuGrupo();
+
                 for(DataSnapshot dados : snapshot.getChildren()){
                     /*Lista os usuários cadastrados, porém
                     não adiciona o próprio usuario aos contatos*/

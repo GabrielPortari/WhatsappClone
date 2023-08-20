@@ -60,6 +60,7 @@ public class ChatActivity extends AppCompatActivity {
     private ImageView imageCamera;
     private FloatingActionButton fabChat;
     private Usuario usuarioSelecionado;
+    private Usuario usuarioLogado;
     private Grupo grupo;
 
     private RecyclerView recyclerMensagem;
@@ -78,6 +79,11 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        //Recupera dados do usuario logado
+        usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
+        idUsuarioEnvia = UsuarioFirebase.getIdUsuario();
+
         //Configuraçoes iniciais
         nomeChat = findViewById(R.id.texNome_chat);
         fotoChat = findViewById(R.id.circleImageView_chat);
@@ -92,9 +98,6 @@ public class ChatActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(getColor(R.color.white));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        //Recupera dados do usuario logado
-        idUsuarioEnvia = UsuarioFirebase.getIdUsuario();
 
         //Recuperar Dados do usuario clicado
         Bundle bundle = getIntent().getExtras();
@@ -162,7 +165,6 @@ public class ChatActivity extends AppCompatActivity {
                 //}
             }
         });
-
     }
     public void enviarMensagem(View v){
         String textMsg = editMensagem.getText().toString();
@@ -182,20 +184,20 @@ public class ChatActivity extends AppCompatActivity {
                 salvarConversa(idUsuarioEnvia, idUsuarioRecebe, usuarioSelecionado, mensagem, false);
 
                 // salva pra quem recebe
-                Usuario usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
                 salvarConversa(idUsuarioRecebe, idUsuarioEnvia, usuarioLogado, mensagem, false);
 
             }else{ // ENVIANDO MENSAGEM PRO GRUPO
-
                 for(Usuario membroGrupo : grupo.getMembros()){
                     String idMembroGrupo = Base64Custom.codeBase64(membroGrupo.getEmail());
                     String idUsuario = UsuarioFirebase.getIdUsuario();
 
                     Mensagem mensagem = new Mensagem();
+
                     mensagem.setIdUsuario(idUsuario);
                     mensagem.setMensagem(textMsg);
+                    mensagem.setNome(usuarioLogado.getNome());
 
-                    //Salvar mensagem para os membros
+                    //Salvar mensagem para os membros no firebase
                     salvarMensagemFirebase(idMembroGrupo, idUsuarioRecebe, mensagem);
 
                     salvarConversa(idMembroGrupo, idUsuarioRecebe, usuarioSelecionado, mensagem, true);
@@ -249,6 +251,8 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void recuperarMensagens(){
+
+        mensagens.clear();
         childEventListenerMensagens = mensagemReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
@@ -316,14 +320,33 @@ public class ChatActivity extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<Uri> task) {
                                                 Uri url = task.getResult();
 
-                                                //Criar a mensagem
-                                                Mensagem mensagem = new Mensagem();
-                                                mensagem.setIdUsuario(idUsuarioEnvia);
-                                                mensagem.setMensagem("imagem.jpeg");
-                                                mensagem.setImagem(url.toString());
+                                                if(usuarioSelecionado != null){
+                                                    //Criar a mensagem
+                                                    Mensagem mensagem = new Mensagem();
+                                                    mensagem.setIdUsuario(idUsuarioEnvia);
+                                                    mensagem.setMensagem("imagem.jpeg");
+                                                    mensagem.setImagem(url.toString());
 
-                                                //Salvar mensagem no firebase
-                                                salvarMensagemFirebase(idUsuarioEnvia, idUsuarioRecebe, mensagem);
+                                                    //Salvar mensagem no firebase
+                                                    salvarMensagemFirebase(idUsuarioEnvia, idUsuarioRecebe, mensagem);
+                                                    salvarMensagemFirebase(idUsuarioRecebe, idUsuarioEnvia, mensagem);
+                                                }else{
+                                                    for(Usuario membroGrupo : grupo.getMembros()){
+                                                        String idMembroGrupo = Base64Custom.codeBase64(membroGrupo.getEmail());
+                                                        String idUsuario = UsuarioFirebase.getIdUsuario();
+
+                                                        Mensagem mensagem = new Mensagem();
+
+                                                        mensagem.setIdUsuario(idUsuario);
+                                                        mensagem.setMensagem("imagem.jpeg");
+                                                        mensagem.setNome(usuarioLogado.getNome());
+                                                        mensagem.setImagem(url.toString());
+
+                                                        //Salvar mensagem para todos os membros no firebase
+                                                        salvarMensagemFirebase(idMembroGrupo, idUsuarioRecebe, mensagem);
+                                                        salvarConversa(idMembroGrupo, idUsuarioRecebe, usuarioSelecionado, mensagem, true);
+                                                    }
+                                                }
                                             }
                                         });
                                     }

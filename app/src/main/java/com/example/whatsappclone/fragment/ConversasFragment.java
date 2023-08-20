@@ -139,6 +139,8 @@ public class ConversasFragment extends Fragment {
     }
 
     public void recuperarConversa(){
+
+        listaConversas.clear();
         conversasChildEventListener = conversasReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
