@@ -61,19 +61,24 @@ public class ConfigActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
-        //definição dos findviewbyid
+
+        //configurações iniciais
         imageButton_galeria = findViewById(R.id.imageButton_galeria);
         imageButton_camera = findViewById(R.id.imageButton_camera);
         circleImageView = findViewById(R.id.circleImageView_config);
         editNome = findViewById(R.id.editNome_config);
         imageAttNome = findViewById(R.id.imageAtualizaNome_config);
 
-        //configurações iniciais
         storageReference = ConfiguracaoFirebase.getFirebaseStorageReference();
         idUsuario = UsuarioFirebase.getIdUsuario();
         usuarioLogado = UsuarioFirebase.getDadosUsuarioLogado();
 
         //Validação das permissões
+        /*
+        Não está funcionando
+        Não está funcionando
+        Não está funcionando
+        */
         Permissao.validarPermissao(permissoes, this, 1);
 
         //Configuração da toolbar
@@ -92,13 +97,13 @@ public class ConfigActivity extends AppCompatActivity {
         }
         editNome.setText(user.getDisplayName());
 
-        //Listeners dos botões de camera e galeria
+        //clicklistener dos botões de camera e galeria para mudança de foto
         imageButton_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Chamando intent para abrir a câmera
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                //if(intent.resolveActivity(getPackageManager()) != null){ //NAO ABRE A CAMERA NO EMULADOR POR CAUSA DO IF
+                //if(intent.resolveActivity(getPackageManager()) != null){ //NAO ABRE A CAMERA NO EMULADOR POR CAUSA DO CONDIÇÃO
                     cameraActivityResultLauncher.launch(intent);
                 //}
             }
@@ -107,11 +112,13 @@ public class ConfigActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                //if(intent.resolveActivity(getPackageManager()) != null){ //NAO ABRE A GALERIA NO EMULADOR POR CAUSA DO IF
+                //if(intent.resolveActivity(getPackageManager()) != null){ //NAO ABRE A GALERIA NO EMULADOR POR CAUSA DA CONDIÇÃO
                     galeriaActivityResultLauncher.launch(intent);
                 //}
             }
         });
+
+        //clicklistener ao lado do textview para mudar o nome do usuario
         imageAttNome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,6 +135,7 @@ public class ConfigActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        //função que valida as permissões de usuario, novamente, não está funcionando
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         for(int permissaoResultado : grantResults){
             if(permissaoResultado == PackageManager.PERMISSION_DENIED){
@@ -163,14 +171,19 @@ public class ConfigActivity extends AppCompatActivity {
             Toast.makeText(this, "Foto alterada", Toast.LENGTH_SHORT).show();
         }
     }
+
+    //nova forma de utilizar o start activity for result
     private ActivityResultLauncher<Intent> cameraActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == Activity.RESULT_OK){
+                        /*****************************A CODIFICAÇÃO COMEÇA AQUI****************************/
+
                         Bitmap img = null;
                         try{
+                            //Tenta recuperar a imagem obtida atraves da camera e setar
                             img = (Bitmap) result.getData().getExtras().get("data");
                             if(img != null){
                                 circleImageView.setImageBitmap(img);
@@ -214,14 +227,17 @@ public class ConfigActivity extends AppCompatActivity {
             }
     );
 
+    //nova forma de utilizar o start activity for result
     private ActivityResultLauncher<Intent> galeriaActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == Activity.RESULT_OK){
+                        /*****************************A CODIFICAÇÃO COMEÇA AQUI****************************/
                         Bitmap img = null;
                         try{
+                            //Tenta recuperar a foto da galeria
                             Uri localImg = result.getData().getData();
                             img = MediaStore.Images.Media.getBitmap(getContentResolver(), localImg);
                             if(img != null){

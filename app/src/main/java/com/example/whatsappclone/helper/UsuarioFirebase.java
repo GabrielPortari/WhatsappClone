@@ -14,6 +14,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class UsuarioFirebase {
+    /*
+    Classe utilizada para recuperar informações do usuário logado no app
+     */
     public static String getIdUsuario(){
         FirebaseAuth usuario = ConfiguracaoFirebase.getFirebaseAuthReference();
         String email = usuario.getCurrentUser().getEmail();

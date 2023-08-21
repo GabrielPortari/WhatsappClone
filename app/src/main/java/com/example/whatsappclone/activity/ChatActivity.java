@@ -150,17 +150,20 @@ public class ChatActivity extends AppCompatActivity {
                 .child(idUsuarioEnvia)
                 .child(idUsuarioRecebe);
 
+        //listener do botão de enviar mensagem
         fabChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 enviarMensagem(v);
             }
         });
+
+        //listener do botão para enviar uma foto
         imageCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                //if(intent.resolveActivity(getPackageManager()) != null){ //NAO ABRE A CAMERA NO EMULADOR POR CAUSA DO IF
+                //if(intent.resolveActivity(getPackageManager()) != null){ //NAO ABRE A CAMERA NO EMULADOR POR CAUSA DA CONDIÇÃO
                 cameraActivityResultLauncher.launch(intent);
                 //}
             }
@@ -200,6 +203,7 @@ public class ChatActivity extends AppCompatActivity {
                     //Salvar mensagem para os membros no firebase
                     salvarMensagemFirebase(idMembroGrupo, idUsuarioRecebe, mensagem);
 
+                    //Salva a conversa no firebase
                     salvarConversa(idMembroGrupo, idUsuarioRecebe, usuarioSelecionado, mensagem, true);
                 }
             }

@@ -103,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        //Caso o usuário ja esteja logado, abre direto a main activity
         FirebaseUser usuarioAtual = auth.getCurrentUser();
         if(usuarioAtual != null){
             abrirTelaPrincipal();

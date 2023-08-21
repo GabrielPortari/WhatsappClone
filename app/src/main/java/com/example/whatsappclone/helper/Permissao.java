@@ -12,6 +12,10 @@ import java.util.List;
 
 
 public class Permissao {
+    /*
+    Classe utilizada com metodos para validar as permissões do usuario, porém como as permissões nao são validadas,
+    a classe não tem utilidade
+     */
     public static boolean validarPermissao(String[] p, Activity activity, int requestCode){
         if(Build.VERSION.SDK_INT > 21){
             List<String> listaPermissao = new ArrayList<>();

@@ -70,6 +70,7 @@ public class ConversasFragment extends Fragment {
                 //Recupera o usuario/grupo de acordo com a conversa selecionada
                 Conversa conversaSelecionada = listaConversas.get(position);
 
+                //Envia diferentes dados dependendo do tipo da conversa -> grupo/individual
                 if(conversaSelecionada.getIsGroup()){
                     Grupo grupoSelecionado = conversaSelecionada.getGrupo();
                     Intent intent = new Intent(getActivity(), ChatActivity.class);
@@ -123,6 +124,7 @@ public class ConversasFragment extends Fragment {
         Log.i("INFO BUSCA", "BUSCANDO: " + s);
     }
 
+
     public void recarregarConversas(){
         /*
         conversasAdapter = new ConversasAdapter(listaConversas, getActivity());
@@ -141,6 +143,7 @@ public class ConversasFragment extends Fragment {
     public void recuperarConversa(){
 
         listaConversas.clear();
+        //recupera as conversas e exibe em uma recycler view
         conversasChildEventListener = conversasReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {

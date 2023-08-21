@@ -65,7 +65,10 @@ public class ContatosFragment extends Fragment {
             public void onItemClick(View view, int position) {
                 Usuario usuarioSelecionado = listaContatos.get(position);
                 boolean cabecalho = usuarioSelecionado.getEmail().isEmpty();
-
+                /*
+                Caso clique no cabeçalho abre a activity de criar grupo
+                caso contrario abre a conversa com quem foi selecionado
+                */
                 if(cabecalho){
                     Intent intent = new Intent(getActivity(), GrupoActivity.class);
                     startActivity(intent);
@@ -87,7 +90,7 @@ public class ContatosFragment extends Fragment {
             }
         }));
 
-        //EMAIL VAZIO É UTILIZADO COMO CABEÇALHO PARA NOVO GRUPO
+
 
         return view;
     }
@@ -111,15 +114,13 @@ public class ContatosFragment extends Fragment {
         listaContatos.add(itemGrupo);
     }
     public void recuperarContatos(){
-
-
         eventListenerContatos = usuariosRef.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 listaContatos.clear();
-                criarMenuGrupo();
+                criarMenuGrupo(); //EMAIL VAZIO É CRIADO PARA SER UTILIZADO COMO CABEÇALHO PARA NOVO GRUPO
 
                 for(DataSnapshot dados : snapshot.getChildren()){
                     /*Lista os usuários cadastrados, porém

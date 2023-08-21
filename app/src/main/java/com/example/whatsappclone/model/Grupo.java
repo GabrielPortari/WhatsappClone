@@ -14,12 +14,12 @@ public class Grupo implements Serializable {
     private List<Usuario> membros;
 
     public Grupo() {
+        //Gera um id unico para o grupo sempre que um objeto grupo é criado
         DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference();
         DatabaseReference grupoReference = databaseReference.child("grupos");
 
         String idGrupoFirebase = grupoReference.push().getKey();
         setId(idGrupoFirebase);
-
     }
     public void salvarNoFirebase(){
         DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference();
@@ -27,8 +27,7 @@ public class Grupo implements Serializable {
 
         grupoReference.child(getId()).setValue(this);
 
-        //Salvar a conversa para os membros do grupo
-
+        //Salvar a conversa para todos os membros do grupo
         for(Usuario membro : getMembros()){
             String idEnvia = Base64Custom.codeBase64(membro.getEmail());
             String idRecebe = getId();

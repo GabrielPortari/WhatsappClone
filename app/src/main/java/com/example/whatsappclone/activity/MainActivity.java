@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("WhatsappClone");
         setSupportActionBar(toolbar);
 
+        //configurações iniciais
         auth = ConfiguracaoFirebase.getFirebaseAuthReference();
         tabLayout = findViewById(R.id.tabLayout);
         viewPager2 = findViewById(R.id.viewPager);
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         //Configuração das abas e fragments
         viewPagerAdapter = new ViewPagerAdapter(this);
         viewPager2.setAdapter(viewPagerAdapter);
+
+        //configuração dos listener e adapter dos fragments da tela inicial contatos/conversas
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         //Fim configuração das abas e fragments
     }
 
+    //Criação do menu -> busca, configurações e logout
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -74,6 +78,13 @@ public class MainActivity extends AppCompatActivity {
         MenuItem busca = menu.findItem(R.id.menu_pesquisa);
         SearchView editBusca = (SearchView) busca.getActionView();
 
+        //CRIAÇÃO DA FUNÇÃO DE BUSCA EM COVERSAS
+        /*
+        NÃO ESTÁ FUNCIONANDO
+        NÃO ESTÁ FUNCIONANDO
+        NÃO ESTÁ FUNCIONANDO
+        NÃO ESTÁ FUNCIONANDO
+         */
         editBusca.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
@@ -83,14 +94,17 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        //listener para quando algo for digitado na barra de busca
         editBusca.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                //função chamada quando o botão de buscar for pressionado, desativado
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                //função chamada sempre que uma nova letra for digitada
                 ConversasFragment fragment = (ConversasFragment) viewPagerAdapter.createFragment(0);
                 viewPager2.setCurrentItem(0);
                 tabLayout.getTabAt(0).select();
@@ -106,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        //seleção de icones do menu, logout, configurações e busca
         if(item.getItemId() == R.id.menu_sair){
             deslogarUsuario();
             finish();

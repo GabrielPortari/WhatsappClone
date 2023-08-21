@@ -11,6 +11,9 @@ public class ConfiguracaoFirebase {
     private static StorageReference storage;
     private static FirebaseAuth auth;
 
+    /*
+    Classe para recuperar referencia do database, autenticação e storage de imagens
+     */
     public static DatabaseReference getFirebaseDatabaseReference(){
         if(dbReference == null){
             dbReference = FirebaseDatabase.getInstance().getReference();

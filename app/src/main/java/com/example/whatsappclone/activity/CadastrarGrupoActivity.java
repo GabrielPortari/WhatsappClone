@@ -70,6 +70,7 @@ public class CadastrarGrupoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //configurações iniciais
         text_quantidadeParticipantes = findViewById(R.id.text_quantidadeParticipantes);
         fab_criarGrupo = findViewById(R.id.fab_confirmarCriarGrupo);
         recyclerMembrosSelecionados = findViewById(R.id.recycler_membrosParticipantes);
@@ -78,6 +79,7 @@ public class CadastrarGrupoActivity extends AppCompatActivity {
         storageReference = ConfiguracaoFirebase.getFirebaseStorageReference();
         grupo = new Grupo();
 
+        //recupera as informações
         if (getIntent().getExtras() != null) {
             List<Usuario> membros = (List<Usuario>) getIntent().getExtras().getSerializable("membros");
             listaMembrosSelecionados.addAll(membros);
@@ -92,6 +94,7 @@ public class CadastrarGrupoActivity extends AppCompatActivity {
         recyclerMembrosSelecionados.setHasFixedSize(true);
         recyclerMembrosSelecionados.setAdapter(grupoSelecionadoAdapter);
 
+        //clicklistener para selecionar uma imagem de perfil para o grupo
         imageGrupo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +105,7 @@ public class CadastrarGrupoActivity extends AppCompatActivity {
             }
         });
 
+        //clicklistener para finalizar a criação de grupo
         fab_criarGrupo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

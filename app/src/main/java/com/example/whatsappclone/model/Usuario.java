@@ -26,11 +26,11 @@ public class Usuario implements Serializable {
         usuario.setValue(this);
     }
     public void atualizarUsuario(){
-
         String idUsuario = UsuarioFirebase.getIdUsuario();
         DatabaseReference databaseReference = ConfiguracaoFirebase.getFirebaseDatabaseReference();
         DatabaseReference userReference = databaseReference.child("usuarios").child(idUsuario);
 
+        //Utiliza-se map para atualizar os dados do usuario no firebase
         Map<String, Object> usuarioAtualizado = converterMap();
 
         userReference.updateChildren(usuarioAtualizado);

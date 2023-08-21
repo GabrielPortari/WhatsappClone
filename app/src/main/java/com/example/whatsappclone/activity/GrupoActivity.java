@@ -183,6 +183,7 @@ public class GrupoActivity extends AppCompatActivity {
         super.onStop();
     }
     public void atualizarToolbar(){
+        //Ao selecionar um usuario ou desselecionar um usuário, a toolbar atualiza a quantidade de membros do grupo
         int totalSelecionados = listaMembrosSelecionados.size();
         int total = listaMembros.size() + totalSelecionados;
         toolbar.setSubtitle(totalSelecionados + " de " + total + " membros selecionados.");
